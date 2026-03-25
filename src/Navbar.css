@@ -1,0 +1,27 @@
+/* Exemple de styles pour le composant Navbar */
+.navbar {
+    background-color: #f0f0f0; /* Couleur de fond du navbar */
+    width: 200px; /* Largeur du navbar */
+    height: 100%; /* Hauteur du navbar (adapter selon votre mise en page) */
+    position: fixed; /* Position fixe pour rester visible pendant le défilement */
+    left: 0; /* Alignement à gauche */
+    top: 0; /* Alignement en haut */
+    padding: 20px 10px; /* Espacement intérieur */
+    display: flex;
+    flex-direction: column; /* Affichage des liens en colonne */
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333; /* Couleur du texte des liens */
+    padding: 10px 0; /* Espacement entre les liens */
+}
+
+.nav-links a:hover {
+    background-color: #ddd; /* Couleur de fond au survol */
+}

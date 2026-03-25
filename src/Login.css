@@ -1,0 +1,305 @@
+.background {
+    background-image: url('../src/images/Backgrd.png');
+    background-repeat: no-repeat;
+    background-size: cover; /* Adapter la taille pour remplir l'élément */
+    background-position: center; /* Centrer l'image de fond */
+    height: 100vh; /* Hauteur de l'écran */
+    width: 100%; /* Largeur de l'écran */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  @media (max-width: 1200px) {
+    .background {
+      background-size: cover; /* Réduire la taille pour les écrans jusqu'à 1200px de large */
+      height: 160vh; /* Réduire la hauteur à 80% de la hauteur de l'écran */
+    }
+  }
+  .description {
+    font-family: Cambria, sans-serif !important; /* Utilisation de Cambria comme police principale, avec une alternative sans-serif */
+    font-weight: bold !important; /* Éventuellement en gras */
+    font-size: 40px !important; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 40px; /* Décalage sur l'axe x */
+    top: 430px; /* Décalage sur l'axe y */
+    color: #b01f26 !important; /* Couleur du texte en rouge (#b01f26) */
+    margin-bottom: 48px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
+  
+    /* Media query pour les écrans plus petits */
+    @media (max-width: 1200px) {
+      display: none !important;
+    }
+  }
+
+  .additional-text {
+    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
+    font-weight: normal !important; /* Poids de la police normal */
+    font-size: 26px !important; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 40px; /* Décalage sur l'axe x */
+    top: 500px; /* Décalage sur l'axe y */
+    color: #2e3957 !important; /* Couleur du texte en bleu (#2e3957) */
+    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
+  }
+  
+  @media (max-width: 1200px) {
+    .additional-text {
+     display: none;
+    }
+    
+  }
+  @media (max-width: 768px) {
+    .additional-text {
+      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
+      left: 15px; /* Nouvelle position sur l'axe x */
+      top: 300px; /* Nouvelle position sur l'axe y */
+    }}
+
+  .logo {
+    width: 348px; /* Largeur originale */
+    height: auto; /* Hauteur originale */
+    position: absolute;
+    left: 40px; /* Position sur l'axe x */
+    top: 220px; /* Position sur l'axe y */
+  }
+  
+  /* Media query pour les écrans plus petits */
+  @media (max-width: 768px) {
+    .logo {
+      width: 100%; /* Ajuster la largeur pour remplir le conteneur */
+      height: auto; /* Ajuster la hauteur automatiquement en fonction de la largeur */
+      max-width: 250px; /* Limiter la largeur maximale du logo pour éviter qu'il ne devienne trop grand */
+      left: 10px; /* Nouvelle position sur l'axe x */
+      top: 100px; /* Nouvelle position sur l'axe y */
+    }}
+    @media (max-width: 1200px) {
+      .logo {
+       display: none;
+      }
+  }
+  .login-panel {
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 439px; /* Largeur spécifiée */
+    height: 592px; /* Hauteur spécifiée */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    right: 40px; /* Position sur l'axe x depuis la droite */
+    top: 178px; /* Position sur l'axe y depuis le haut */
+    border-radius: 17px;
+  
+    /* Ajout d'une marge en bas pour éviter le chevauchement avec le contenu suivant */
+    margin-bottom: 50px;
+  }
+  @media (max-width: 768px) {
+    .login-panel {
+      width: 50%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
+      height: auto; /* Ajuster la hauteur automatiquement */
+      right: 10px; /* Nouvelle position sur l'axe x depuis la droite */
+      top: 65px; /* Nouvelle position sur l'axe y depuis le haut */
+      transform: none; /* Réinitialiser la transformation */
+      left: auto; /* Réinitialiser la position sur l'axe x depuis la gauche */
+      border-radius: 17px;
+    }
+  }
+  @media (max-width: 1200px) {
+    .login-panel {
+      width: 439px;  /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
+      height: 592px; /* Ajuster la hauteur automatiquement */
+      right: 0;
+      left: 0;
+      top: 119px; /* Nouvelle position sur l'axe y depuis le haut */
+      margin: auto; /* Centrer horizontalement */
+      transform: none; /* Réinitialiser la transformation */
+      border-radius: 17px;
+    }
+  }
+  /* app.css */
+  
+  .logo1 {
+    height: 101px; /* Hauteur spécifiée */
+    width: 135.45px; /* Largeur spécifiée */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    right: 140px; /* Position sur l'axe x depuis la droite */
+    top: 6px; 
+    margin-left: 30px;
+  
+    /* Media query pour les écrans plus petits */
+    @media (max-width: 1200px) {
+      height: 80px; /* Réduire la hauteur pour les écrans jusqu'à 1200px de large */
+      width: auto; /* Ajuster la largeur automatiquement */
+      position: absolute;
+      right: 0;
+      left: 130px; /* Position sur l'axe x depuis la droite */
+      top: 3px; 
+    }
+  
+  }
+  .additional-text1 {
+    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
+    font-weight: normal !important; /* Poids de la police normal */
+    font-size: 15px !important; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 15px; /* Décalage sur l'axe x */
+    top: 100px; /* Décalage sur l'axe y */
+    color: #2e3956 !important; /* Couleur du texte en bleu (#2e3957) */
+    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
+  }
+  
+  @media (max-width: 768px) {
+    .additional-text1 {
+      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
+      left: 15px; /* Décalage sur l'axe x */
+    top: 80px;
+    }
+  }
+  /* app.css */
+  
+  .form-group1 {
+    width: 400px; /* Largeur spécifiée */
+    height: 70px; /* Hauteur spécifiée */
+    font-family: "Adobe Garamond Pro", sans-serif; /* Utilisation de Adobe Garamond Pro comme police principale */
+    font-weight: normal; /* Poids de la police normal */
+    font-size: 16px; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 15px; /* Décalage sur l'axe x */
+    top: 150px; /* Décalage sur l'axe y */
+    opacity: 0.5; /* Opacité de 50% */
+  
+    /* Media query pour les écrans plus petits */
+    @media (max-width: 1200px) {
+      width: 90%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
+      left: 20px; /* Nouvelle position sur l'axe x pour les écrans plus petits */
+      top: 130px; /* Nouvelle position sur l'axe y pour les écrans plus petits */
+    }
+  }
+  .form-group2 {
+    width: 400px; /* Largeur spécifiée */
+    height: 70px; /* Hauteur spécifiée */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
+    font-weight: normal !important; /* Poids de la police normal */
+    font-size: 9px !important; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 15px; /* Décalage sur l'axe x */
+    top: 257px; /* Décalage sur l'axe y */
+    opacity: 0.5;
+  
+    /* Media query pour les écrans plus petits */
+    @media (max-width: 1200px) {
+      width: 90%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
+      left: 20px; /* Nouvelle position sur l'axe x pour les écrans plus petits */
+      top: 240px; /* Nouvelle position sur l'axe y pour les écrans plus petits */
+    }
+  }
+  .additional-text2 {
+    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
+    font-weight: normal !important; /* Poids de la police normal */
+    font-size: 15px !important; /* Taille de la police en pixels */
+    position: absolute; /* Position absolue par rapport à son conteneur parent */
+    left: 15px; /* Décalage sur l'axe x */
+    top: 370px; /* Décalage sur l'axe y */
+    color: #2091cb !important; /* Couleur du texte en bleu (#2e3957) */
+    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
+  }
+  
+  @media (max-width: 1200px) {
+    .additional-text2 {
+      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
+      left: 20px; /* Décalage sur l'axe x */
+      top: 360px;
+    }
+  }
+  .copy {
+    margin-top: 50px;
+    padding-left: 100px;
+    top:320px;
+    color: grey;
+  }
+  @media (max-width: 1200px) {
+    .copy {
+      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
+      left: 15px; /* Décalage sur l'axe x */
+      top: 120px;
+      color: grey;
+    }
+  }
+
+  
+  .boutons .MuiButton-root {
+    height: 50px; /* Réduire la hauteur du bouton */
+    width: 250px; /* Réduire la largeur du bouton */
+    left: 90px;
+    padding: 5px; /* Réduire le padding du bouton */
+    font-size: 15px; /* Réduire la taille de la police du bouton */
+    top: 193px;
+    margin-top: 30px;
+  }
+  @media (max-width: 1200px) {
+    .boutons .MuiButton-root {
+      height: 50px; /* Réduire la hauteur du bouton */
+      width: 250px; /* Réduire la largeur du bouton */
+      left: 90px;
+      padding: 5px; /* Réduire le padding du bouton */
+      font-size: 15px; /* Réduire la taille de la police du bouton */
+      top: 180px;
+    }
+  }
+
+  
+  
+  .language-select-container {
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+    position: absolute;
+    color: white;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    border: none;
+  }
+  .language-select-container .MuiInputLabel-root {
+    margin-right: 8px;
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+    color: #b01f26;
+  }
+  .language-select-container .MuiSelect-root {
+    min-width: 100px;
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+    color: white;
+    border: none;
+  }
+  .language-select-container .MuiInputLabel-root {
+    margin-right: 8px;
+  }
+  .language-select-container .MuiSelect-root {
+    min-width: 100px;
+  }
+  
+  .icon {
+    width: 30px; /* Ajustez selon vos besoins */
+    height: auto;
+  }
+  @media (max-width: 600px) {
+    .login-panel {
+        padding-top: 20px; /* Ajustez selon vos besoins */
+    }
+    .language-select-container {
+        top: 10px;
+        right: 10px;
+    }
+    .icon {
+        width: 25px; /* Ajustez selon vos besoins */
+    }
+
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
