@@ -1167,7 +1167,6 @@ export default function MiniDrawer() {
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, fontSize: isMobile ? '0.9rem' : '1.25rem', mr: 1 }}>
             {openCategory ? openCategory : 'Menu'}
-            {!isMobile && selectedTab !== -1 && ` - ${categories.find((cat) => cat.name === openCategory)?.items[selectedTab]}`}
           </Typography>
 
           {/* 🚫 Articles sans mouvement */}
@@ -1451,9 +1450,9 @@ export default function MiniDrawer() {
         </Toolbar>
       </AppBar>
 
-      <Drawer 
+      <Drawer
         variant="permanent"
-        open={open} 
+        open={open}
         onClose={handleDrawerClose}
         PaperProps={{
           style: { backgroundColor: '#F5F7F8' }
@@ -1491,7 +1490,6 @@ export default function MiniDrawer() {
                     </ListItemIcon>
                     <ListItemText
                       primary="Département Commercial"
-                      sx={{ opacity: open ? 1 : 0 }}
                     />
                     {open && (openCategory === 'Commercial' ? <ExpandLess /> : <ExpandMore />)}
                   </ListItemButton>
@@ -1782,7 +1780,6 @@ export default function MiniDrawer() {
                     </ListItemIcon>
                     <ListItemText
                       primary="Documents"
-                      sx={{ opacity: open ? 1 : 0 }}
                     />
                     {open && (openCategory === 'Documents' ? <ExpandLess /> : <ExpandMore />)}
                   </ListItemButton>
