@@ -14,6 +14,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -89,6 +90,8 @@ import { addNotificationListener, emitNotification, removeNotificationListener, 
 import PaymentsIcon from '@mui/icons-material/Payments';
 import ArticlesNoMovementPage from "../Commercial/ArticlesNoMovementPage";
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 //alert
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import Dialog from '@mui/material/Dialog';
@@ -96,7 +99,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import AlertePage from '../Commercial/alert';
-
+import Prime from './prime';
+import NumPersonel from './NumPersonel';
 
 const drawerWidth = 340;
 
@@ -135,14 +139,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'isMobile',
+})(({ theme, open, isMobile }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
+  ...(open && !isMobile && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -160,25 +164,34 @@ const AppBar = styled(MuiAppBar, {
       width: `calc(100% - ${theme.spacing(8)} - 1px)`,
     },
   }),
+  // ...(isMobile && {
+  //   width: '100%',
+  //   marginLeft: 0,
+  // }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: !open ? 100 : drawerWidth,
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' && prop !== 'isMobile' })(
+  ({ theme, open, isMobile }) => ({
+    width: !open ? 70 : drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
     '& .MuiDrawer-paper': {
-      position: 'relative',
-      width: !open ? 100 : drawerWidth,
+      width: !open ? (isMobile ? 0 : 65) : drawerWidth,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
       overflowX: 'hidden',
-      '&:hover': {
-        width: drawerWidth,
-      },
+      ...(!isMobile && {
+        position: 'relative',
+        '&:hover': {
+          width: drawerWidth,
+        },
+      }),
+      ...(isMobile && {
+        position: 'fixed',
+      }),
       ...(open && {
         ...openedMixin(theme),
       }),
@@ -245,6 +258,7 @@ export const connectSocket = (onConnected) => {
 
 export default function MiniDrawer() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = React.useState(false);
   const [selectedTab, setSelectedTab] = useState(-1);
   const [openCategory, setOpenCategory] = React.useState(null);
@@ -331,19 +345,19 @@ export default function MiniDrawer() {
   }, [openNoMvtDialog, noMvtPage, noMvtPageSize]);
 
   useEffect(() => {
-  if (!user?.ID_UTILISATEUR) return;
+    if (!user?.ID_UTILISATEUR) return;
 
-  // run immediately
-  fetchAlerts();
-
-  // run every 1 minute
-  const interval = setInterval(() => {
+    // run immediately
     fetchAlerts();
-  }, 60_000); // 1 min
 
-  // cleanup
-  return () => clearInterval(interval);
-}, [user?.ID_UTILISATEUR]);
+    // run every 1 minute
+    const interval = setInterval(() => {
+      fetchAlerts();
+    }, 60_000); // 1 min
+
+    // cleanup
+    return () => clearInterval(interval);
+  }, [user?.ID_UTILISATEUR]);
 
   const handleAlertIconClick = () => {
     setAlertsDialogOpen(true);
@@ -614,14 +628,14 @@ export default function MiniDrawer() {
 
   const toggleActif = async (alertId) => {
     try {
-      
-      const newValue ='N';
-  
+
+      const newValue = 'N';
+
       await axios.patch(`${BASE_URL}/api/alerts/${alertId}`, {
         ACTIF: newValue,
-        id:alertId
+        id: alertId
       });
-  
+
       setAlerts(prevAlerts =>
         prevAlerts.map(alert =>
           alert.ID_ALERT === alertId ? { ...alert, ACTIF: newValue } : alert
@@ -711,84 +725,84 @@ export default function MiniDrawer() {
     }
   };
 
-useEffect(() => {
-  // Variable pour suivre si l'utilisateur a interagi
-  const hasUserInteracted = { current: false };
-  
-  // Fonction pour marquer l'interaction utilisateur
-  const markUserInteraction = () => {
-    hasUserInteracted.current = true;
-    // Nettoyer les écouteurs après la première interaction
-    document.removeEventListener('click', markUserInteraction);
-    document.removeEventListener('keydown', markUserInteraction);
-    document.removeEventListener('touchstart', markUserInteraction);
-  };
+  useEffect(() => {
+    // Variable pour suivre si l'utilisateur a interagi
+    const hasUserInteracted = { current: false };
 
-  // Ajouter les écouteurs d'événements
-  document.addEventListener('click', markUserInteraction);
-  document.addEventListener('keydown', markUserInteraction);
-  document.addEventListener('touchstart', markUserInteraction);
+    // Fonction pour marquer l'interaction utilisateur
+    const markUserInteraction = () => {
+      hasUserInteracted.current = true;
+      // Nettoyer les écouteurs après la première interaction
+      document.removeEventListener('click', markUserInteraction);
+      document.removeEventListener('keydown', markUserInteraction);
+      document.removeEventListener('touchstart', markUserInteraction);
+    };
 
-  const fetchNotifications = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/getNotifications`, {
-        params: { userLogin: user.LOGIN },
-      });
+    // Ajouter les écouteurs d'événements
+    document.addEventListener('click', markUserInteraction);
+    document.addEventListener('keydown', markUserInteraction);
+    document.addEventListener('touchstart', markUserInteraction);
 
-      // Vérifier s'il y a de nouvelles notifications
-      if (response.data.length > notifications.length) {
-        // Récupérer la notification la plus récente
-        const newestNotification = response.data[0];
-        setNewNotification(newestNotification);
-        setOpenSnackbar(true);
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/getNotifications`, {
+          params: { userLogin: user.LOGIN },
+        });
 
-        // Jouer le son de notification
-        const playNotificationSound = async () => {
-          try {
-            const audio = new Audio('/notification_sound.mp3');
-            
-            // Si l'utilisateur a déjà interagi, jouer directement
-            if (hasUserInteracted.current) {
-              await audio.play();
-            } else {
-              // Sinon, attendre la prochaine interaction
-              
-              const playOnInteraction = () => {
-                audio.play().catch(e => console.log('Erreur de lecture:', e));
-                document.removeEventListener('click', playOnInteraction);
-                document.removeEventListener('keydown', playOnInteraction);
-                document.removeEventListener('touchstart', playOnInteraction);
-              };
-              
-              document.addEventListener('click', playOnInteraction);
-              document.addEventListener('keydown', playOnInteraction);
-              document.addEventListener('touchstart', playOnInteraction);
+        // Vérifier s'il y a de nouvelles notifications
+        if (response.data.length > notifications.length) {
+          // Récupérer la notification la plus récente
+          const newestNotification = response.data[0];
+          setNewNotification(newestNotification);
+          setOpenSnackbar(true);
+
+          // Jouer le son de notification
+          const playNotificationSound = async () => {
+            try {
+              const audio = new Audio('/notification_sound.mp3');
+
+              // Si l'utilisateur a déjà interagi, jouer directement
+              if (hasUserInteracted.current) {
+                await audio.play();
+              } else {
+                // Sinon, attendre la prochaine interaction
+
+                const playOnInteraction = () => {
+                  audio.play().catch(e => console.log('Erreur de lecture:', e));
+                  document.removeEventListener('click', playOnInteraction);
+                  document.removeEventListener('keydown', playOnInteraction);
+                  document.removeEventListener('touchstart', playOnInteraction);
+                };
+
+                document.addEventListener('click', playOnInteraction);
+                document.addEventListener('keydown', playOnInteraction);
+                document.addEventListener('touchstart', playOnInteraction);
+              }
+            } catch (error) {
+              console.error('Erreur lors de la lecture du son:', error);
             }
-          } catch (error) {
-            console.error('Erreur lors de la lecture du son:', error);
-          }
-        };
+          };
 
-        playNotificationSound();
+          playNotificationSound();
+        }
+
+        setNotifications(response.data);
+        prevNotificationLength.current = response.data.length;
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
       }
+    };
 
-      setNotifications(response.data);
-      prevNotificationLength.current = response.data.length;
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    }
-  };
+    fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 50000);
 
-  fetchNotifications();
-  const intervalId = setInterval(fetchNotifications, 50000);
-
-  return () => {
-    clearInterval(intervalId);
-    document.removeEventListener('click', markUserInteraction);
-    document.removeEventListener('keydown', markUserInteraction);
-    document.removeEventListener('touchstart', markUserInteraction);
-  };
-}, [user.LOGIN]);
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('click', markUserInteraction);
+      document.removeEventListener('keydown', markUserInteraction);
+      document.removeEventListener('touchstart', markUserInteraction);
+    };
+  }, [user.LOGIN]);
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -1138,22 +1152,22 @@ useEffect(() => {
             </div>
           </Alert>
         </Snackbar> */}
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: 'space-between', px: isMobile ? 1 : 2 }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 5,
+              marginRight: isMobile ? 1 : 5,
               ...(open && { display: 'none' }),
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, fontSize: isMobile ? '0.9rem' : '1.25rem', mr: 1 }}>
             {openCategory ? openCategory : 'Menu'}
-            {selectedTab !== -1 && ` - ${categories.find((cat) => cat.name === openCategory)?.items[selectedTab]}`}
+            {!isMobile && selectedTab !== -1 && ` - ${categories.find((cat) => cat.name === openCategory)?.items[selectedTab]}`}
           </Typography>
 
           {/* 🚫 Articles sans mouvement */}
@@ -1176,7 +1190,7 @@ useEffect(() => {
                   },
                 }}
               >
-                <ProductionQuantityLimitsIcon sx={{ width: 40, height: 40 }} />
+                <ProductionQuantityLimitsIcon sx={{ width: isMobile ? 30 : 40, height: isMobile ? 30 : 40 }} />
               </Badge>
             </IconButton>
 
@@ -1187,6 +1201,7 @@ useEffect(() => {
                 color: "white",
                 fontSize: "0.7rem",
                 whiteSpace: "nowrap",
+                display: isMobile ? 'none' : 'block'
               }}
             >
               Sans mouvement
@@ -1206,7 +1221,7 @@ useEffect(() => {
                   },
                 }}
               >
-                <ContactSupportIcon sx={{ width: 40, height: 40 }} />
+                <ContactSupportIcon sx={{ width: isMobile ? 30 : 40, height: isMobile ? 30 : 40 }} />
               </Badge>
             </IconButton>
 
@@ -1217,6 +1232,7 @@ useEffect(() => {
                 color: "white",
                 fontSize: "0.7rem",
                 whiteSpace: "nowrap",
+                display: isMobile ? 'none' : 'block'
               }}
             >
               Mes Alerts
@@ -1224,21 +1240,21 @@ useEffect(() => {
           </Box>
 
 
-          <Box sx={{ marginLeft: 'auto', marginRight: 3, fontWeight: 'bold' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 0, mr: isMobile ? 1 : 3, fontWeight: 'bold' }}>
             {user && user.ROLE && (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: 8 }}>
                   <img src={userIcon} alt="person icon" style={{ width: "30px", height: "30px" }} />
                 </div>
                 <div>
-                  <Typography variant="body1" color="secondary" style={{ fontSize: "25px", fontWeight: "bold", color: "#e99c05", marginTop: "5px" }}>
+                  <Typography variant="body1" color="secondary" style={{ fontSize: isMobile ? "12px" : "25px", fontWeight: "bold", color: "#e99c05", marginTop: "5px", textWrap: 'nowrap' }}>
                     {user.LOGIN}
                   </Typography>
-                  <Typography variant="body2" color="white" style={{ fontSize: "14px", fontWeight: "normal", marginLeft: 10 }}>
+                  <Typography variant="body2" color="white" style={{ fontSize: isMobile ? "10px" : "12px", fontWeight: "normal", marginLeft: 10, display: isMobile ? 'none' : 'block' }}>
                     {user.ROLE}
                   </Typography>
                 </div>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: isMobile ? 0.5 : 3 }}>
 
                   {/* 🔔 Notifications */}
                   <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -1259,11 +1275,11 @@ useEffect(() => {
                         }}
                       >
                         <NotificationsIcon
-                          sx={{ height: 40, width: 40, color: "#FAFA33" }}
+                          sx={{ height: isMobile ? 30 : 40, width: isMobile ? 30 : 40, color: "#FAFA33" }}
                         />
                       </Badge>
                     </IconButton>
-                    <Typography variant="caption" sx={{ mt: "-6px", color: "white" }}>
+                    <Typography variant="caption" sx={{ mt: "-6px", color: "white", display: isMobile ? 'none' : 'block' }}>
                       Notifications
                     </Typography>
                   </Box>
@@ -1286,12 +1302,12 @@ useEffect(() => {
                               <img
                                 src={require('../icons/save.png')}
                                 alt="Ticket"
-                                style={{ height: 40, width: 40 }}
+                                style={{ height: isMobile ? 30 : 40, width: isMobile ? 30 : 40 }}
                               />
                             </Badge>
                           </IconButton>
                         </Tooltip>
-                        <Typography variant="caption" sx={{ mt: "-6px", color: "white" }}>
+                        <Typography variant="caption" sx={{ mt: "-6px", color: "white", display: isMobile ? 'none' : 'block' }}>
                           Ticket
                         </Typography>
                       </>
@@ -1314,12 +1330,12 @@ useEffect(() => {
                               <img
                                 src={require('../icons/save.png')}
                                 alt="Évaluation"
-                                style={{ height: 40, width: 40 }}
+                                style={{ height: isMobile ? 30 : 40, width: isMobile ? 30 : 40 }}
                               />
                             </Badge>
                           </IconButton>
                         </Tooltip>
-                        <Typography variant="caption" sx={{ mt: "-6px", color: "white" }}>
+                        <Typography variant="caption" sx={{ mt: "-6px", color: "white", display: isMobile ? 'none' : 'block' }}>
                           Évaluation
                         </Typography>
                       </>
@@ -1435,7 +1451,14 @@ useEffect(() => {
         </Toolbar>
       </AppBar>
 
-      <Drawer variant="permanent" open={open} style={{ backgroundColor: '#F5F7F8' }} >
+      <Drawer 
+        variant="permanent"
+        open={open} 
+        onClose={handleDrawerClose}
+        PaperProps={{
+          style: { backgroundColor: '#F5F7F8' }
+        }}
+      >
 
         <DrawerHeader style={{ backgroundColor: '#F5F7F8' }}>
           <IconButton onClick={handleDrawerClose}>
@@ -1445,274 +1468,336 @@ useEffect(() => {
         <Divider />
         <List style={{ backgroundColor: '#F5F7F8' }}>
 
-          {!isLoading && accessRights.ACCESS_CONTACT === 1 && (<>
-            <Tooltip title="Commercial" placement="right">
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => handleCategoryClick('Commercial')}>
-                  <ListItemIcon>
-                    <ContactsIcon style={{ color: '#4379F2' }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Département Commercial" />
-                  {openCategory === 'Commercial' ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-              </ListItem>
-            </Tooltip>
-
-
-            <Collapse in={openCategory === 'Commercial'} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {!isLoading && accessRights.ACCESS_PARTENAIRE === 1 && (<>
-
-                  <Tooltip title="Partenaires" placement="right" >
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(1)}>
-                        <ListItemIcon>
-                          <Diversity3Icon />
-                        </ListItemIcon>
-                        <ListItemText primary="Partenaires" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-                <Tooltip title="Ordres administratif" placement="right">
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(18)}>
-                      <ListItemIcon>
-                        < PersonSearchIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Ordres administratif" sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                {!isLoading && accessRights.ACCESS_INVESTISSEUR === 1 && (<>
-
-                  <Tooltip title="Investisseurs" placement="right">
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(2)}>
-                        <ListItemIcon>
-                          <AssuredWorkloadRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Investisseurs" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-                {!isLoading && accessRights.ACCESS_CLIENT_CSPD === 1 && (<>
-
-                  <Tooltip title="ClientS CSPD" placement="right" >
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(3)}>
-                        <ListItemIcon>
-                          <GroupsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Clients CSPD" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-
-                {!isLoading && accessRights.ACCESS_CLIENT_FDM === 1 && (<>
-
-                  <Tooltip title="Clients FDM" placement="right" >
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(4)}>
-                        <ListItemIcon>
-                          <PersonIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Clients FDM" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-                {!isLoading && accessRights.ACCESS_FAMILLE === 1 && (<>
-
-                  <Tooltip title="Famille" placement="right" >
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(5)}>
-                        <ListItemIcon>
-                          <FamilyRestroomIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Famille" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-                {!isLoading && accessRights.ACCESS_HISTORIQUE_APPEL === 1 && (<>
-
-                  <Tooltip title="Journal des appels" placement="right" >
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(6)}>
-                        <ListItemIcon>
-                          <RestoreIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Journal des appels" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>
-                )}
-                {!isLoading && accessRights.ACCESS_ACHATS === 1 && (<>
-
-                  <Tooltip title="Demande d'achat" placement="right">
-                    <ListItem disablePadding>
-                      <ListItemButton onClick={() => handleTabClick(7)}>
-                        <ListItemIcon>
-                          <ProductionQuantityLimitsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Demande d'achat" sx={boldTextStyle} />
-                      </ListItemButton>
-                    </ListItem>
-                  </Tooltip>
-                </>)}
-
-                <Tooltip title="Sav" placement="right">
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(8)}>
-                      <ListItemIcon>
-                        <SettingsApplicationsIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Sav" sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-
-                <Tooltip title="Renseignement client" placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(10)}>
-                      <ListItemIcon>
-                        <PersonSearchIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Renseignements commerciaux " sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-
-                <Tooltip title="Demandes et Réclamations" placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(9)}>
-                      <ListItemIcon>
-                        <ApartmentIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Demandes et Réclamations " sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-
-                <Tooltip title="Ordre Administration" placement="right">
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(11)}>
-                      <ListItemIcon>
-                        <SettingsApplicationsIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Administration" sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                <Tooltip title="SAV Réclamation Client (APP)" placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(12)}>
-                      <ListItemIcon>
-                        <ShopTwoIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="SAV Réclamation Client (APP) " sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                <Tooltip
-                  title="SOS Clients "
-                  placement="right"
-                >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(15)}>
-                      <ListItemIcon>
-                        <SosIcon />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary="SOS Clients "
-                        sx={boldTextStyle}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                <Tooltip title="Mon journal d'appel" placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(13)}>
-                      <ListItemIcon>
-                        <PhonePausedIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Mon journal d'appel" sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                <Tooltip title="Visite Clients " placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(14)}>
-                      <ListItemIcon>
-                        <ApartmentIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Visite Clients " sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-                <Tooltip title="Mes Alerts" placement="right" >
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => handleTabClick(20)}>
-                      <ListItemIcon>
-                        <TimelapseIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Mes Alerts" sx={boldTextStyle} />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-
-
-              </List>
-            </Collapse>
-          </>
-          )}
-          {!isLoading && accessRights.ACCESS_ALL_DOC === 1 && (
+          {!isLoading && accessRights.ACCESS_CONTACT === 1 && (
             <>
-              <Tooltip title="Documents" placement="right">
-                <ListItem disablePadding>
+              <Tooltip title="Commercial" placement="right">
+                <ListItem disablePadding sx={{ display: 'block' }}>
                   <ListItemButton
-                    onClick={() =>
-                      handleCategoryClick("Documents")
-                    }
+                    onClick={() => handleCategoryClick('Commercial')}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
                   >
-                    <ListItemIcon>
-                      <InsertDriveFileIcon style={{ color: "#4379F2" }}></InsertDriveFileIcon>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <ContactsIcon style={{ color: '#4379F2' }} />
                     </ListItemIcon>
-                    <ListItemText primary="Documents" />
-                    {openCategory === "Documents" ? (
-                      <ExpandLess />
-                    ) : (
-                      <ExpandMore />
-                    )}
+                    <ListItemText
+                      primary="Département Commercial"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                    {open && (openCategory === 'Commercial' ? <ExpandLess /> : <ExpandMore />)}
                   </ListItemButton>
                 </ListItem>
               </Tooltip>
-              <Collapse
-                in={openCategory === "Documents"}
-                timeout="auto"
-                unmountOnExit
-              >
 
+              <Collapse in={openCategory === 'Commercial'} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {!isLoading && accessRights.ACCESS_PARTENAIRE === 1 && (
+                    <Tooltip title="Partenaires" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(1)}>
+                          <ListItemIcon>
+                            <Diversity3Icon />
+                          </ListItemIcon>
+                          <ListItemText primary="Partenaires" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  <Tooltip title="Ordres administratif" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(18)}>
+                        <ListItemIcon>
+                          <PersonSearchIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Ordres administratif" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  {!isLoading && accessRights.ACCESS_INVESTISSEUR === 1 && (
+                    <Tooltip title="Investisseurs" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(2)}>
+                          <ListItemIcon>
+                            <AssuredWorkloadRoundedIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Investisseurs" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  {!isLoading && accessRights.ACCESS_CLIENT_CSPD === 1 && (
+                    <Tooltip title="ClientS CSPD" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(3)}>
+                          <ListItemIcon>
+                            <GroupsIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Clients CSPD" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  {!isLoading && accessRights.ACCESS_CLIENT_FDM === 1 && (
+                    <Tooltip title="Clients FDM" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(4)}>
+                          <ListItemIcon>
+                            <PersonIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Clients FDM" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  {!isLoading && accessRights.ACCESS_FAMILLE === 1 && (
+                    <Tooltip title="Famille" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(5)}>
+                          <ListItemIcon>
+                            <FamilyRestroomIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Famille" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  {!isLoading && accessRights.ACCESS_HISTORIQUE_APPEL === 1 && (
+                    <Tooltip title="Journal des appels" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(6)}>
+                          <ListItemIcon>
+                            <RestoreIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Journal des appels" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  {!isLoading && accessRights.ACCESS_ACHATS === 1 && (
+                    <Tooltip title="Demande d'achat" placement="right">
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => handleTabClick(7)}>
+                          <ListItemIcon>
+                            <ProductionQuantityLimitsIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Demande d'achat" sx={boldTextStyle} />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  )}
+                  <Tooltip title="Sav" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(8)}>
+                        <ListItemIcon>
+                          <SettingsApplicationsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Sav" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Renseignement client" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(10)}>
+                        <ListItemIcon>
+                          <PersonSearchIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Renseignements commerciaux " sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Demandes et Réclamations" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(9)}>
+                        <ListItemIcon>
+                          <ApartmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Demandes et Réclamations " sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Ordre Administration" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(11)}>
+                        <ListItemIcon>
+                          <SettingsApplicationsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Administration" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="SAV Réclamation Client (APP)" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(12)}>
+                        <ListItemIcon>
+                          <ShopTwoIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="SAV Réclamation Client (APP) " sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="SOS Clients " placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(15)}>
+                        <ListItemIcon>
+                          <SosIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="SOS Clients " sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Mon journal d'appel" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(13)}>
+                        <ListItemIcon>
+                          <PhonePausedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Mon journal d'appel" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Visite Clients " placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(14)}>
+                        <ListItemIcon>
+                          <ApartmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Visite Clients " sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Mes Alerts" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(20)}>
+                        <ListItemIcon>
+                          <TimelapseIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Mes Alerts" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                  <Tooltip title="Primes" placement="right">
+                    <ListItem disablePadding>
+                      <ListItemButton onClick={() => handleTabClick(24)}>
+                        <ListItemIcon>
+                          <CardGiftcardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Primes" sx={boldTextStyle} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
+                </List>
+              </Collapse>
+            </>
+          )}
+
+          {!isLoading && user.ROLE === 'administrateur' && (
+            <>
+              <Tooltip title="Paramétrage" placement="right">
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    onClick={() => handleCategoryClick('Paramétrage')}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <img src={settings} alt="Settings Icon" style={{ width: '30px', height: '30px' }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Paramétrage"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                    {open && (openCategory === 'Paramétrage' ? <ExpandLess /> : <ExpandMore />)}
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+
+              <Tooltip title="Administration" placement="right">
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    onClick={() => handleCategoryClick('Administration')}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <ManageAccountsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Administration"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                    {open && (openCategory === 'Administration' ? <ExpandLess /> : <ExpandMore />)}
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+            </>
+          )}
+
+          {!isLoading && (accessRights.ACCESS_ALL_DOC === 1 || accessRights.ACCESS_DOC_AD === 1) && (
+            <>
+              <Tooltip title="Documents" placement="right">
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    onClick={() => handleCategoryClick('Documents')}
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <InsertDriveFileIcon style={{ color: "#4379F2" }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Documents"
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                    {open && (openCategory === 'Documents' ? <ExpandLess /> : <ExpandMore />)}
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+              <Collapse in={openCategory === "Documents"} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {departments.map((dept, index) => (
-                    <Tooltip
-                      title={`Département ${dept.NOM}`}
-                      placement="right"
-                      key={dept.ID}
-                    >
+                    <Tooltip title={`Département ${dept.NOM}`} placement="right" key={dept.ID}>
                       <ListItem disablePadding>
                         <ListItemButton onClick={() => handleTabClick(index, dept)}>
                           <ListItemIcon>
                             <ViewStreamIcon />
                           </ListItemIcon>
-                          <ListItemText
-                            primary={`Département ${dept.NOM}`}
-                            sx={boldTextStyle}
-                          />
+                          <ListItemText primary={`Département ${dept.NOM}`} sx={boldTextStyle} />
                         </ListItemButton>
                       </ListItem>
                     </Tooltip>
@@ -1721,7 +1806,6 @@ useEffect(() => {
               </Collapse>
             </>
           )}
-
         </List>
       </Drawer>
       <Box
@@ -1760,6 +1844,8 @@ useEffect(() => {
         {selectedTab === 20 && openCategory === 'Commercial' && <AlertePage />}
         {selectedTab === 21 && openCategory === 'Commercial' && <ArticlesNoMovementPage />}
         {selectedTab === 22 && openCategory === 'Commercial' && <MouvementsByDate />}
+        {selectedTab === 24 && openCategory === 'Commercial' && <Prime />}
+        {selectedTab === 25 && openCategory === 'Commercial' && <NumPersonel searchTerm={searchTerm} setSearchTerm={setSearchTerm} selectedOption={selectedOption} setSelectedOption={setSelectedOption} value={value} setValue={setValue} />}
 
         {openCategory === "Documents" && (
           <>
@@ -1780,100 +1866,100 @@ useEffect(() => {
           </>
         )}
         <Dialog open={alertsDialogOpen} onClose={handleCloseAlertsDialog} maxWidth="sm" fullWidth >
-  <DialogTitle> Mes alertes d'aujourd'hui </DialogTitle>
-  <DialogContent dividers>
-    {alerts.length === 0 ? (
-      <Typography variant="body2" color="text.secondary">
-        Aucune alerte pour aujourd'hui.
-      </Typography>
-    ) : (
-      alerts.map((alert) => (
-        <Box
-          key={alert.ID_ALERT}
-          sx={{
-            border: '1px solid #ddd',
-            borderRadius: 1.5,
-            p: 1.5,
-            mb: 1.5,
-            cursor: 'pointer',
-            position: 'relative',
-            '&:hover': { backgroundColor: '#f5f5f5' },
-          }}
-          onClick={() => {
-  const isCurrentlyExpanded = expandedAlertId === alert.ID_ALERT;
-  
-  // Comportement existant : toggle expansion
-  setExpandedAlertId(isCurrentlyExpanded ? null : alert.ID_ALERT);
+          <DialogTitle> Mes alertes d'aujourd'hui </DialogTitle>
+          <DialogContent dividers>
+            {alerts.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                Aucune alerte pour aujourd'hui.
+              </Typography>
+            ) : (
+              alerts.map((alert) => (
+                <Box
+                  key={alert.ID_ALERT}
+                  sx={{
+                    border: '1px solid #ddd',
+                    borderRadius: 1.5,
+                    p: 1.5,
+                    mb: 1.5,
+                    cursor: 'pointer',
+                    position: 'relative',
+                    '&:hover': { backgroundColor: '#f5f5f5' },
+                  }}
+                  onClick={() => {
+                    const isCurrentlyExpanded = expandedAlertId === alert.ID_ALERT;
 
-  // SI on ouvre (pas quand on ferme) → déclenche le PATCH
-  if (!isCurrentlyExpanded && alert.ENVOIYEUR === 'CRM') {
-    toggleActif(alert.ID_ALERT);
-  }
-}}
-        >
-          {alert.DATE_ALERT === tomorrowString && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                backgroundColor: '#ff9800',
-                color: 'white',
-                borderRadius: '12px',
-                padding: '2px 10px',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
-              }}
-            >
-              Demain
-            </Box>
-          )}
+                    // Comportement existant : toggle expansion
+                    setExpandedAlertId(isCurrentlyExpanded ? null : alert.ID_ALERT);
 
-          {/* ===== NEW: CRM Badge next to title ===== */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {alert.TITRE}
-            </Typography>
+                    // SI on ouvre (pas quand on ferme) → déclenche le PATCH
+                    if (!isCurrentlyExpanded && alert.ENVOIYEUR === 'CRM') {
+                      toggleActif(alert.ID_ALERT);
+                    }
+                  }}
+                >
+                  {alert.DATE_ALERT === tomorrowString && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        backgroundColor: '#ff9800',
+                        color: 'white',
+                        borderRadius: '12px',
+                        padding: '2px 10px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
+                      }}
+                    >
+                      Demain
+                    </Box>
+                  )}
 
-            {alert.ENVOIYEUR === 'CRM' && (
-              <Box
-                sx={{
-                  backgroundColor: '#2e7d32', // green
-                  color: 'white',
-                  borderRadius: '12px',
-                  padding: '2px 8px',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  boxShadow: '0px 1px 3px rgba(0,0,0,0.2)',
-                }}
-              >
-                CRM
-              </Box>
+                  {/* ===== NEW: CRM Badge next to title ===== */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {alert.TITRE}
+                    </Typography>
+
+                    {alert.ENVOIYEUR === 'CRM' && (
+                      <Box
+                        sx={{
+                          backgroundColor: '#2e7d32', // green
+                          color: 'white',
+                          borderRadius: '12px',
+                          padding: '2px 8px',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          boxShadow: '0px 1px 3px rgba(0,0,0,0.2)',
+                        }}
+                      >
+                        CRM
+                      </Box>
+                    )}
+                  </Box>
+
+                  <Collapse in={expandedAlertId === alert.ID_ALERT}>
+                    <Box sx={{ mt: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Date création : <strong>{alert.DATE_CREATION || ''}</strong>
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Date alerte : <strong>{alert.DATE_ALERT || ''}</strong>
+                      </Typography>
+                      <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-wrap' }}>
+                        {alert.TEXT_ALERT}
+                      </Typography>
+                    </Box>
+                  </Collapse>
+                </Box>
+              ))
             )}
-          </Box>
-
-          <Collapse in={expandedAlertId === alert.ID_ALERT}>
-            <Box sx={{ mt: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Date création : <strong>{alert.DATE_CREATION || ''}</strong>
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Date alerte : <strong>{alert.DATE_ALERT || ''}</strong>
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-wrap' }}>
-                {alert.TEXT_ALERT}
-              </Typography>
-            </Box>
-          </Collapse>
-        </Box>
-      ))
-    )}
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleCloseAlertsDialog}>Fermer</Button>
-  </DialogActions>
-</Dialog>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAlertsDialog}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog
           open={openNoMvtDialog}
@@ -1889,63 +1975,63 @@ useEffect(() => {
           </DialogTitle>
 
           <DialogContent sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-  <TableContainer component={Paper} sx={{ flex: 1, overflow: "auto" }}>
-    <Table stickyHeader size="small">
-      <TableHead>
-        <TableRow>
-          <TableCell>Code</TableCell>
-          <TableCell>Intitulé</TableCell>
-          <TableCell>Dernier mvt</TableCell>
-          <TableCell>Jours</TableCell>
-          <TableCell>Stock CSPD</TableCell>
-          <TableCell>Stock FDM</TableCell>
-        </TableRow>
-      </TableHead>
+            <TableContainer component={Paper} sx={{ flex: 1, overflow: "auto" }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Code</TableCell>
+                    <TableCell>Intitulé</TableCell>
+                    <TableCell>Dernier mvt</TableCell>
+                    <TableCell>Jours</TableCell>
+                    <TableCell>Stock CSPD</TableCell>
+                    <TableCell>Stock FDM</TableCell>
+                  </TableRow>
+                </TableHead>
 
-      <TableBody>
-        {noMvtLoading ? (
-          <TableRow>
-            <TableCell colSpan={6} align="center">
-              Chargement...
-            </TableCell>
-          </TableRow>
-        ) : noMvtRows.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={6} align="center">
-              Aucun article trouvé
-            </TableCell>
-          </TableRow>
-        ) : (
-          noMvtRows.map((row, idx) => (
-            <TableRow key={`${row.CODE_ARTICLE}-${idx}`}>
-              <TableCell>{row.CODE_ARTICLE}</TableCell>
-              <TableCell>{row.INTIT_ARTICLE}</TableCell>
-              <TableCell>{row.LAST_MVT_DATE}</TableCell>
-              <TableCell>{row.DAYS_SINCE_LAST_MOVEMENT}</TableCell>
-              <TableCell>{row.STOCK_CSPD}</TableCell>
-              <TableCell>{row.STOCK_FDM}</TableCell>
-            </TableRow>
-          ))
-        )}
-      </TableBody>
-    </Table>
-  </TableContainer>
+                <TableBody>
+                  {noMvtLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center">
+                        Chargement...
+                      </TableCell>
+                    </TableRow>
+                  ) : noMvtRows.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center">
+                        Aucun article trouvé
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    noMvtRows.map((row, idx) => (
+                      <TableRow key={`${row.CODE_ARTICLE}-${idx}`}>
+                        <TableCell>{row.CODE_ARTICLE}</TableCell>
+                        <TableCell>{row.INTIT_ARTICLE}</TableCell>
+                        <TableCell>{row.LAST_MVT_DATE}</TableCell>
+                        <TableCell>{row.DAYS_SINCE_LAST_MOVEMENT}</TableCell>
+                        <TableCell>{row.STOCK_CSPD}</TableCell>
+                        <TableCell>{row.STOCK_FDM}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-  <Box sx={{ borderTop: "1px solid #eee" }}>
-    <TablePagination
-      rowsPerPageOptions={[15, 30, 50, 100]}
-      component="div"
-      count={noMvtTotal}
-      rowsPerPage={noMvtPageSize}
-      page={noMvtPage}
-      onPageChange={(e, newPage) => setNoMvtPage(newPage)}
-      onRowsPerPageChange={(e) => {
-        setNoMvtPageSize(parseInt(e.target.value, 10));
-        setNoMvtPage(0);
-      }}
-    />
-  </Box>
-</DialogContent>
+            <Box sx={{ borderTop: "1px solid #eee" }}>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 50, 100]}
+                component="div"
+                count={noMvtTotal}
+                rowsPerPage={noMvtPageSize}
+                page={noMvtPage}
+                onPageChange={(e, newPage) => setNoMvtPage(newPage)}
+                onRowsPerPageChange={(e) => {
+                  setNoMvtPageSize(parseInt(e.target.value, 10));
+                  setNoMvtPage(0);
+                }}
+              />
+            </Box>
+          </DialogContent>
 
 
           <DialogActions>

@@ -1,305 +1,189 @@
+/* Login.css */
+/* Final Responsive Polish - Strictly Respecting Original Aesthetics */
+
+* {
+    box-sizing: border-box;
+}
+
 .background {
     background-image: url('../src/images/Backgrd.png');
     background-repeat: no-repeat;
-    background-size: cover; /* Adapter la taille pour remplir l'élément */
-    background-position: center; /* Centrer l'image de fond */
-    height: 100vh; /* Hauteur de l'écran */
-    width: 100%; /* Largeur de l'écran */
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  
-  @media (max-width: 1200px) {
-    .background {
-      background-size: cover; /* Réduire la taille pour les écrans jusqu'à 1200px de large */
-      height: 160vh; /* Réduire la hauteur à 80% de la hauteur de l'écran */
-    }
-  }
-  .description {
-    font-family: Cambria, sans-serif !important; /* Utilisation de Cambria comme police principale, avec une alternative sans-serif */
-    font-weight: bold !important; /* Éventuellement en gras */
-    font-size: 40px !important; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 40px; /* Décalage sur l'axe x */
-    top: 430px; /* Décalage sur l'axe y */
-    color: #b01f26 !important; /* Couleur du texte en rouge (#b01f26) */
-    margin-bottom: 48px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
-  
-    /* Media query pour les écrans plus petits */
-    @media (max-width: 1200px) {
-      display: none !important;
-    }
-  }
+    position: relative;
+    padding: 20px 0; /* Add some padding for small scrolling */
+}
 
-  .additional-text {
-    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
-    font-weight: normal !important; /* Poids de la police normal */
-    font-size: 26px !important; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 40px; /* Décalage sur l'axe x */
-    top: 500px; /* Décalage sur l'axe y */
-    color: #2e3957 !important; /* Couleur du texte en bleu (#2e3957) */
-    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
-  }
-  
-  @media (max-width: 1200px) {
-    .additional-text {
-     display: none;
+/* Ensure container handles layout flow */
+.MuiContainer-root {
+    position: relative;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center;
+}
+
+.MuiGrid-container {
+    align-items: center;
+}
+
+/* LEFT CONTENT (Responsive Slogans) */
+.left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.description {
+    font-family: Cambria, sans-serif !important;
+    font-weight: bold !important;
+    font-size: clamp(2.2rem, 6vw, 3rem) !important;
+    color: #b01f26 !important; /* Original Red */
+    margin-bottom: 0.8rem !important;
+    line-height: 1.1;
+    text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.9);
+}
+
+.additional-text {
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+    font-weight: normal !important;
+    font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+    color: #2e3957 !important; /* Original Blue */
+    line-height: 1.5;
+    max-width: 500px;
+}
+
+/* LOGIN PANEL (Responsive & Semi-transparent) */
+.login-panel {
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo1 {
+    height: auto;
+    width: 140px;
+    margin-bottom: 1.5rem;
+    display: block;
+    object-fit: contain;
+}
+
+.form-group1, .form-group2 {
+    width: 100%;
+    margin-bottom: 1rem !important;
+}
+
+.MuiTextField-root {
+    background: white !important;
+    border-radius: 8px;
+}
+
+.additional-text2 {
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+    font-weight: normal !important;
+    font-size: 15px !important;
+    color: #2091cb !important;
+    cursor: pointer;
+    text-align: left;
+    display: block;
+    width: 100%;
+    margin-bottom: 2rem !important;
+    text-decoration: none;
+}
+
+.additional-text2:hover {
+    text-decoration: underline;
+}
+
+/* BUTTON */
+.boutons {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.boutons .MuiButton-root.connect {
+    height: 52px;
+    background-color: #2091cb !important;
+    color: white !important;
+    font-weight: bold !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    text-transform: uppercase !important;
+    width: 100% !important;
+    box-shadow: 0 4px 12px rgba(32, 145, 203, 0.3) !important;
+}
+
+/* FOOTER */
+.copy {
+    text-align: center;
+    width: 100%;
+    margin-top: 2.5rem !important;
+    color: #777 !important;
+}
+
+/* MOBILE SPECIFIC OVERRIDES */
+@media (max-width: 900px) {
+    .background {
+        padding: 40px 10px;
+        align-items: flex-start; /* Better for long vertical content on mobile */
+    }
+
+    .left-content {
+        text-align: center;
+        align-items: center;
+        padding-top: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .login-panel {
+        width: 95%; /* Avoid touching edges */
+        padding: 2rem 1.5rem;
     }
     
-  }
-  @media (max-width: 768px) {
-    .additional-text {
-      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
-      left: 15px; /* Nouvelle position sur l'axe x */
-      top: 300px; /* Nouvelle position sur l'axe y */
-    }}
+    .description {
+        font-size: 2.4rem !important;
+    }
+}
 
-  .logo {
-    width: 348px; /* Largeur originale */
-    height: auto; /* Hauteur originale */
-    position: absolute;
-    left: 40px; /* Position sur l'axe x */
-    top: 220px; /* Position sur l'axe y */
-  }
-  
-  /* Media query pour les écrans plus petits */
-  @media (max-width: 768px) {
-    .logo {
-      width: 100%; /* Ajuster la largeur pour remplir le conteneur */
-      height: auto; /* Ajuster la hauteur automatiquement en fonction de la largeur */
-      max-width: 250px; /* Limiter la largeur maximale du logo pour éviter qu'il ne devienne trop grand */
-      left: 10px; /* Nouvelle position sur l'axe x */
-      top: 100px; /* Nouvelle position sur l'axe y */
-    }}
-    @media (max-width: 1200px) {
-      .logo {
-       display: none;
-      }
-  }
-  .login-panel {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 439px; /* Largeur spécifiée */
-    height: 592px; /* Hauteur spécifiée */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    right: 40px; /* Position sur l'axe x depuis la droite */
-    top: 178px; /* Position sur l'axe y depuis le haut */
-    border-radius: 17px;
-  
-    /* Ajout d'une marge en bas pour éviter le chevauchement avec le contenu suivant */
-    margin-bottom: 50px;
-  }
-  @media (max-width: 768px) {
+/* VERY SMALL SCREENS */
+@media (max-width: 480px) {
+    .description {
+        font-size: 2rem !important;
+    }
     .login-panel {
-      width: 50%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
-      height: auto; /* Ajuster la hauteur automatiquement */
-      right: 10px; /* Nouvelle position sur l'axe x depuis la droite */
-      top: 65px; /* Nouvelle position sur l'axe y depuis le haut */
-      transform: none; /* Réinitialiser la transformation */
-      left: auto; /* Réinitialiser la position sur l'axe x depuis la gauche */
-      border-radius: 17px;
+        padding: 1.5rem 1rem;
     }
-  }
-  @media (max-width: 1200px) {
-    .login-panel {
-      width: 439px;  /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
-      height: 592px; /* Ajuster la hauteur automatiquement */
-      right: 0;
-      left: 0;
-      top: 119px; /* Nouvelle position sur l'axe y depuis le haut */
-      margin: auto; /* Centrer horizontalement */
-      transform: none; /* Réinitialiser la transformation */
-      border-radius: 17px;
-    }
-  }
-  /* app.css */
-  
-  .logo1 {
-    height: 101px; /* Hauteur spécifiée */
-    width: 135.45px; /* Largeur spécifiée */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    right: 140px; /* Position sur l'axe x depuis la droite */
-    top: 6px; 
-    margin-left: 30px;
-  
-    /* Media query pour les écrans plus petits */
-    @media (max-width: 1200px) {
-      height: 80px; /* Réduire la hauteur pour les écrans jusqu'à 1200px de large */
-      width: auto; /* Ajuster la largeur automatiquement */
-      position: absolute;
-      right: 0;
-      left: 130px; /* Position sur l'axe x depuis la droite */
-      top: 3px; 
-    }
-  
-  }
-  .additional-text1 {
-    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
-    font-weight: normal !important; /* Poids de la police normal */
-    font-size: 15px !important; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 15px; /* Décalage sur l'axe x */
-    top: 100px; /* Décalage sur l'axe y */
-    color: #2e3956 !important; /* Couleur du texte en bleu (#2e3957) */
-    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
-  }
-  
-  @media (max-width: 768px) {
-    .additional-text1 {
-      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
-      left: 15px; /* Décalage sur l'axe x */
-    top: 80px;
-    }
-  }
-  /* app.css */
-  
-  .form-group1 {
-    width: 400px; /* Largeur spécifiée */
-    height: 70px; /* Hauteur spécifiée */
-    font-family: "Adobe Garamond Pro", sans-serif; /* Utilisation de Adobe Garamond Pro comme police principale */
-    font-weight: normal; /* Poids de la police normal */
-    font-size: 16px; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 15px; /* Décalage sur l'axe x */
-    top: 150px; /* Décalage sur l'axe y */
-    opacity: 0.5; /* Opacité de 50% */
-  
-    /* Media query pour les écrans plus petits */
-    @media (max-width: 1200px) {
-      width: 90%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
-      left: 20px; /* Nouvelle position sur l'axe x pour les écrans plus petits */
-      top: 130px; /* Nouvelle position sur l'axe y pour les écrans plus petits */
-    }
-  }
-  .form-group2 {
-    width: 400px; /* Largeur spécifiée */
-    height: 70px; /* Hauteur spécifiée */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
-    font-weight: normal !important; /* Poids de la police normal */
-    font-size: 9px !important; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 15px; /* Décalage sur l'axe x */
-    top: 257px; /* Décalage sur l'axe y */
-    opacity: 0.5;
-  
-    /* Media query pour les écrans plus petits */
-    @media (max-width: 1200px) {
-      width: 90%; /* Réduire la largeur pour les écrans jusqu'à 1200px de large */
-      left: 20px; /* Nouvelle position sur l'axe x pour les écrans plus petits */
-      top: 240px; /* Nouvelle position sur l'axe y pour les écrans plus petits */
-    }
-  }
-  .additional-text2 {
-    font-family: "Adobe Garamond Pro", sans-serif !important; /* Utilisation de Adobe Garamond Pro comme police principale */
-    font-weight: normal !important; /* Poids de la police normal */
-    font-size: 15px !important; /* Taille de la police en pixels */
-    position: absolute; /* Position absolue par rapport à son conteneur parent */
-    left: 15px; /* Décalage sur l'axe x */
-    top: 370px; /* Décalage sur l'axe y */
-    color: #2091cb !important; /* Couleur du texte en bleu (#2e3957) */
-    margin-bottom: 50px; /* Marge en bas pour éviter le chevauchement avec le contenu suivant */
-  }
-  
-  @media (max-width: 1200px) {
-    .additional-text2 {
-      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
-      left: 20px; /* Décalage sur l'axe x */
-      top: 360px;
-    }
-  }
-  .copy {
-    margin-top: 50px;
-    padding-left: 100px;
-    top:320px;
-    color: grey;
-  }
-  @media (max-width: 1200px) {
-    .copy {
-      font-size: 14.5px !important; /* Réduire la taille de la police pour les petits écrans */
-      left: 15px; /* Décalage sur l'axe x */
-      top: 120px;
-      color: grey;
-    }
-  }
+}
 
-  
-  .boutons .MuiButton-root {
-    height: 50px; /* Réduire la hauteur du bouton */
-    width: 250px; /* Réduire la largeur du bouton */
-    left: 90px;
-    padding: 5px; /* Réduire le padding du bouton */
-    font-size: 15px; /* Réduire la taille de la police du bouton */
-    top: 193px;
-    margin-top: 30px;
-  }
-  @media (max-width: 1200px) {
-    .boutons .MuiButton-root {
-      height: 50px; /* Réduire la hauteur du bouton */
-      width: 250px; /* Réduire la largeur du bouton */
-      left: 90px;
-      padding: 5px; /* Réduire le padding du bouton */
-      font-size: 15px; /* Réduire la taille de la police du bouton */
-      top: 180px;
-    }
-  }
-
-  
-  
-  .language-select-container {
-    font-family: "Adobe Garamond Pro", sans-serif !important;
+.language-select-container {
     position: absolute;
-    color: white;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 15px;
     display: flex;
     align-items: center;
-    border: none;
-  }
-  .language-select-container .MuiInputLabel-root {
-    margin-right: 8px;
-    font-family: "Adobe Garamond Pro", sans-serif !important;
-    color: #b01f26;
-  }
-  .language-select-container .MuiSelect-root {
-    min-width: 100px;
-    font-family: "Adobe Garamond Pro", sans-serif !important;
-    color: white;
-    border: none;
-  }
-  .language-select-container .MuiInputLabel-root {
-    margin-right: 8px;
-  }
-  .language-select-container .MuiSelect-root {
-    min-width: 100px;
-  }
-  
-  .icon {
-    width: 30px; /* Ajustez selon vos besoins */
-    height: auto;
-  }
-  @media (max-width: 600px) {
-    .login-panel {
-        padding-top: 20px; /* Ajustez selon vos besoins */
-    }
-    .language-select-container {
-        top: 10px;
-        right: 10px;
-    }
-    .icon {
-        width: 25px; /* Ajustez selon vos besoins */
-    }
+    z-index: 100;
+}
 
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+.language-select-container .MuiInputLabel-root {
+    margin-right: 8px;
+    color: #b01f26 !important;
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+}
+
+.language-select-container .MuiSelect-root {
+    min-width: 90px;
+    color: #b01f26 !important;
+    font-family: "Adobe Garamond Pro", sans-serif !important;
+}

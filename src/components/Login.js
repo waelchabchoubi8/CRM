@@ -15,7 +15,7 @@ import { setUser } from '../Magasin/store';
 import BASE_URL from '../Utilis/constantes';
 
 // 🎯 FLAG DE DÉBLOCAGE - Mettre à true pour désactiver le blocage
-const FORCE_UNLOCK = false ; // false = blocage actif, true = pas de blocage
+const FORCE_UNLOCK = false; // false = blocage actif, true = pas de blocage
 
 // Ou avec variable d'environnement (plus propre)
 // const FORCE_UNLOCK = process.env.REACT_APP_FORCE_UNLOCK === "true";
@@ -24,7 +24,7 @@ const FORCE_UNLOCK = false ; // false = blocage actif, true = pas de blocage
 const getTrimestreActuel = (date) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  
+
   if (month === 3 && day >= 20 && day <= 24) return { id: "T1", nom: "1er trimestre (Mars)" };
   if (month === 6 && day >= 20 && day <= 24) return { id: "T2", nom: "2ème trimestre (Juin)" };
   if (month === 9 && day >= 20 && day <= 24) return { id: "T3", nom: "3ème trimestre (Septembre)" };
@@ -40,11 +40,11 @@ const getTrimestreActuel = (date) => {
 const isAfterDeadline = (date) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  
+
   return (month === 3 && day > 24) ||
-         (month === 6 && day > 24) ||
-         (month === 9 && day > 24) ||
-         (month === 12 && day > 24);
+    (month === 6 && day > 24) ||
+    (month === 9 && day > 24) ||
+    (month === 12 && day > 24);
 };
 
 // Liste des sociétés
@@ -82,46 +82,46 @@ const Login = () => {
 
   // Fonction pour poster une alerte dans le CRM
   // Fonction pour poster une alerte dans le CRM - UNIQUEMENT pour la COMPTABILITÉ
-const postAlerteCRM = async (titre, message, societesManquantes, periode, user) => {
-  try {
-    const societesList = societesManquantes.join(', ');
-    const textAlert = `${message} Sociétés concernées : ${societesList} Période : ${periode}`;
+  const postAlerteCRM = async (titre, message, societesManquantes, periode, user) => {
+    try {
+      const societesList = societesManquantes.join(', ');
+      const textAlert = `${message} Sociétés concernées : ${societesList} Période : ${periode}`;
 
-const today = new Date();
+      const today = new Date();
 
-const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
 
-const dateAlert = `${year}-${month}-${day}`;
-    
-    console.log('📅 DATE_ALERT (limite):', dateAlert); // "2026-03-21"
-    
-    if (user?.ID_UTILISATEUR) {
-      console.log(`📧 Envoi d'une alerte pour l'utilisateur ${user.UTILISATEUR} (Comptabilité)`);
-      
-      const payload = {
-        TITRE: titre,
-        TEXT_ALERT: textAlert,
-        DATE_ALERT: dateAlert, // ✅ 21/03/26 (pas aujourd'hui !)
-        USER_ID: user.ID_UTILISATEUR,   
-        ENVOIYEUR: "CRM"
-        
-      };
-      
-      console.log("📝 Payload envoyé:", payload);
-      
-      const response = await axios.post(`${BASE_URL}/api/alerts`, payload);
-      console.log('✅ Réponse du serveur:', response.data);
+      const dateAlert = `${year}-${month}-${day}`;
+
+      console.log('📅 DATE_ALERT (limite):', dateAlert); // "2026-03-21"
+
+      if (user?.ID_UTILISATEUR) {
+        console.log(`📧 Envoi d'une alerte pour l'utilisateur ${user.UTILISATEUR} (Comptabilité)`);
+
+        const payload = {
+          TITRE: titre,
+          TEXT_ALERT: textAlert,
+          DATE_ALERT: dateAlert, // ✅ 21/03/26 (pas aujourd'hui !)
+          USER_ID: user.ID_UTILISATEUR,
+          ENVOIYEUR: "CRM"
+
+        };
+
+        console.log("📝 Payload envoyé:", payload);
+
+        const response = await axios.post(`${BASE_URL}/api/alerts`, payload);
+        console.log('✅ Réponse du serveur:', response.data);
+      }
+
+    } catch (error) {
+      console.error('❌ Erreur lors du post de l\'alerte CRM:', error);
+      if (error.response) {
+        console.error('Détails de l\'erreur:', error.response.data);
+      }
     }
-    
-  } catch (error) {
-    console.error('❌ Erreur lors du post de l\'alerte CRM:', error);
-    if (error.response) {
-      console.error('Détails de l\'erreur:', error.response.data);
-    }
-  }
-};
+  };
 
   // Fonction pour vérifier les fichiers manquants
   const checkMissingFiles = async (user) => {
@@ -129,16 +129,16 @@ const dateAlert = `${year}-${month}-${day}`;
       const today = new Date();
       // Pour les tests
       // const today = new Date(2026, 2, 26); // 26 mars 2026 pour test blocage
-      
+
       const currentMonth = today.getMonth() + 1;
       const currentDay = today.getDate();
       const currentYear = today.getFullYear();
-      
+
       // Vérifier si c'est un administrateur
       const isComp = user.ROLE.trim() === 'Comptabilité'
-      
+
       // 1. BLOCAGE - Après le 25 (sauf admin) MAIS avec le flag FORCE_UNLOCK
-      if (isAfterDeadline(today) && !FORCE_UNLOCK ) {
+      if (isAfterDeadline(today) && !FORCE_UNLOCK) {
         if (isComp) {
           setLockMessage(`⛔ Accès bloqué : La période de soumission des rapports trimestriels est terminée (après le 25).\n\nVeuillez contacter l'administrateur.`);
           setLockDialogOpen(true);
@@ -146,23 +146,23 @@ const dateAlert = `${year}-${month}-${day}`;
         }
         return true; // Admin peut passer
       }
-      
+
       // 2. ALERTES - Période 20-24 pour la comptabilité
       const trimestreInfo = getTrimestreActuel(today);
-      
+
       if (isComp) {
         const societesManquantes = [];
-        
+
         for (const societe of SOCIETES_LIST) {
           try {
             const response = await axios.get(`${BASE_URL}/api/rapport/pdfget`, {
-              params: { 
-                company: societe.id, 
-                year: currentYear.toString(), 
-                trimester: trimestreInfo.id 
+              params: {
+                company: societe.id,
+                year: currentYear.toString(),
+                trimester: trimestreInfo.id
               }
             });
-            
+
             if (!response.data || response.data.length === 0) {
               societesManquantes.push(societe.nom);
             }
@@ -171,7 +171,7 @@ const dateAlert = `${year}-${month}-${day}`;
             societesManquantes.push(societe.nom);
           }
         }
-        
+
         if (societesManquantes.length > 0) {
           await postAlerteCRM(
             " RAPPORTS TRIMESTRIELS MANQUANTS",
@@ -180,16 +180,16 @@ const dateAlert = `${year}-${month}-${day}`;
             trimestreInfo.nom,
             user
           );
-          
+
           setAlertSocietes(societesManquantes);
           setAlertPeriode(trimestreInfo.nom);
           setAlertMessage(`⚠️ Rapports trimestriels manquants pour ${trimestreInfo.nom} :\n${societesManquantes.join(', ')}\n\nDes alertes ont été envoyées aux administrateurs.`);
           setAlertDialogOpen(true);
-          
+
           return true; // Permet la connexion
         }
       }
-      
+
       return true;
     } catch (error) {
       console.error("Erreur vérification fichiers:", error);
@@ -224,89 +224,96 @@ const dateAlert = `${year}-${month}-${day}`;
     setAlertDialogOpen(false);
   };
 
- const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  if (isLoggingIn) return;
-  setIsLoggingIn(true);
+    if (isLoggingIn) return;
+    setIsLoggingIn(true);
 
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/api/authenticate`,
-      { LOGIN, MOT_DE_PASSE },
-      { headers: { "Content-Type": "application/json" } }
-    );
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/api/authenticate`,
+        { LOGIN, MOT_DE_PASSE },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-    if (response.data?.message === 'Authentification réussie') {
-      const user = response.data.user;
-      
-      // ✅ ÉTAPE 1 : POINTAGE - À faire AVANT le blocage
-      const userId = user.ID_UTILISATEUR;
-      const userName = user.UTILISATEUR;
+      if (response.data?.message === 'Authentification réussie') {
+        const user = response.data.user;
 
-      const nowUtc = new Date();
-      const tunisiaTime = new Date(nowUtc.getTime() + 60 * 60 * 1000);
-      const today = tunisiaTime.toISOString().slice(0, 10);
-      const fullDateTime = tunisiaTime.toISOString();
-
-      try {
-        const logCheck = await axios.get(`${BASE_URL}/api/log-historique`, {
-          params: { id_user: userId, date_login: today }
-        });
-
-        if (user.POINTAGE === 1 && logCheck.data.data.length === 0) {
-          let dispoValue = "";
-
-          try {
-            const rhResponse = await axios.get(`${BASE_URL}/api/check-departement-demand`, { 
-              params: { date: fullDateTime, id: userId }
-            });
-
-            if (rhResponse.data.exists && ["Mission", "Congé", "Autorisation"].includes(rhResponse.data.demand_type)) {
-              dispoValue = rhResponse.data.demand_type;
-            }
-          } catch (rhErr) {
-            console.warn("API RH indisponible (ignorée)", rhErr);
-          }
-
-          await axios.post(`${BASE_URL}/api/log-historique`, {
-            ID_USER: userId,
-            USER_NAME: userName,
-            DATE_LOGIN: fullDateTime,
-            ETAT: "Validé",
-            DISPO: dispoValue
-          }).catch(err => console.warn("Log échoué (ignoré)", err));
-          
-          console.log("✅ Pointage enregistré pour l'utilisateur:", userName);
+        if (user.DEPARTEMENT !== 'Commercial') {
+          setError("Access denied. Only Commercial department users can log in.");
+          alert("Access denied. Only Commercial department users can log in.");
+          setIsLoggingIn(false);
+          return;
         }
-      } catch (logError) {
-        console.error("❌ Erreur lors du pointage:", logError);
-        // On continue même si le pointage échoue
-      }
-      
-      // ✅ ÉTAPE 2 : VÉRIFICATION DU BLOCAGE - À faire APRÈS le pointage
-      const canProceed = await checkMissingFiles(user);
-      
-      if (!canProceed) {
-        setIsLoggingIn(false);
-        return; // L'utilisateur est bloqué mais son pointage est déjà enregistré
-      }
-      
-      // ✅ ÉTAPE 3 : CONNEXION - Si pas bloqué
-      dispatch(setUser(user));
-      localStorage.setItem('user', JSON.stringify(user));
-      navigate('/appBar');
 
-    } else {
-      alert("Nom d'utilisateur ou mot de passe incorrect");
+        // ✅ ÉTAPE 1 : POINTAGE - À faire AVANT le blocage
+        const userId = user.ID_UTILISATEUR;
+        const userName = user.UTILISATEUR;
+
+        const nowUtc = new Date();
+        const tunisiaTime = new Date(nowUtc.getTime() + 60 * 60 * 1000);
+        const today = tunisiaTime.toISOString().slice(0, 10);
+        const fullDateTime = tunisiaTime.toISOString();
+
+        try {
+          const logCheck = await axios.get(`${BASE_URL}/api/log-historique`, {
+            params: { id_user: userId, date_login: today }
+          });
+
+          if (user.POINTAGE === 1 && logCheck.data.data.length === 0) {
+            let dispoValue = "";
+
+            try {
+              const rhResponse = await axios.get(`${BASE_URL}/api/check-departement-demand`, {
+                params: { date: fullDateTime, id: userId }
+              });
+
+              if (rhResponse.data.exists && ["Mission", "Congé", "Autorisation"].includes(rhResponse.data.demand_type)) {
+                dispoValue = rhResponse.data.demand_type;
+              }
+            } catch (rhErr) {
+              console.warn("API RH indisponible (ignorée)", rhErr);
+            }
+
+            await axios.post(`${BASE_URL}/api/log-historique`, {
+              ID_USER: userId,
+              USER_NAME: userName,
+              DATE_LOGIN: fullDateTime,
+              ETAT: "Validé",
+              DISPO: dispoValue
+            }).catch(err => console.warn("Log échoué (ignoré)", err));
+
+            console.log("✅ Pointage enregistré pour l'utilisateur:", userName);
+          }
+        } catch (logError) {
+          console.error("❌ Erreur lors du pointage:", logError);
+          // On continue même si le pointage échoue
+        }
+
+        // ✅ ÉTAPE 2 : VÉRIFICATION DU BLOCAGE - À faire APRÈS le pointage
+        const canProceed = await checkMissingFiles(user);
+
+        if (!canProceed) {
+          setIsLoggingIn(false);
+          return; // L'utilisateur est bloqué mais son pointage est déjà enregistré
+        }
+
+        // ✅ ÉTAPE 3 : CONNEXION - Si pas bloqué
+        dispatch(setUser(user));
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/appBar');
+
+      } else {
+        alert("Nom d'utilisateur ou mot de passe incorrect");
+      }
+    } catch (error) {
+      console.error('Erreur login:', error);
+      alert('Erreur interne du serveur');
+    } finally {
+      setIsLoggingIn(false);
     }
-  } catch (error) {
-    console.error('Erreur login:', error);
-    alert('Erreur interne du serveur');
-  } finally {
-    setIsLoggingIn(false);
-  }
-};
+  };
 
   return (
     <div className="background">
@@ -336,7 +343,7 @@ const dateAlert = `${year}-${month}-${day}`;
           <Typography variant="body1" sx={{ whiteSpace: 'pre-line', fontSize: '1.1rem' }}>
             {lockMessage}
           </Typography>
-          
+
           {/* Afficher une note si le flag est activé (pour debug) */}
           {FORCE_UNLOCK && (
             <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
@@ -388,7 +395,7 @@ const dateAlert = `${year}-${month}-${day}`;
           <Typography variant="body1" sx={{ whiteSpace: 'pre-line', fontSize: '1.1rem', mb: 2 }}>
             {alertMessage}
           </Typography>
-          
+
           {alertSocietes.length > 0 && (
             <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
               <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
@@ -401,7 +408,7 @@ const dateAlert = `${year}-${month}-${day}`;
               ))}
             </Box>
           )}
-          
+
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
             Des alertes ont été envoyées aux administrateurs.
           </Typography>
@@ -431,20 +438,14 @@ const dateAlert = `${year}-${month}-${day}`;
               La Solution Intégrée
             </Typography>
             <Typography variant="body1" className="additional-text">
-              Optimisez les rênes de votre Entreprise avec<br />
-              révolutionnaire et exceptionnelle !
+              Optimisez la gestion de votre Entreprise avec une<br />
+              solution révolutionnaire et exceptionnelle !
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <br />
             <div className="login-panel">
-              <form onSubmit={handleLogin}>
-                <br />
-                <img src={logoCrm} alt="Logo" className="logo1" style={{ padding: '15px', marginRight: '-15px' }} />
-                <br />
-                
-                {/* Indicateur visuel pour l'admin */}
-               
+              <form onSubmit={handleLogin} style={{ width: '100%' }}>
+                <img src={logoCrm} alt="Logo" className="logo1" />
                 
                 <div className="form-group1">
                   <TextField
@@ -463,8 +464,6 @@ const dateAlert = `${year}-${month}-${day}`;
                     }}
                   />
                 </div>
-                <br />
-                <br />
                 <div className="form-group2">
                   <TextField
                     label="Mot de passe"
@@ -490,20 +489,14 @@ const dateAlert = `${year}-${month}-${day}`;
                     }}
                   />
                 </div>
-                <br />
-                <br />
                 <Typography variant="body1" className="additional-text2" onClick={handlePasswordReset}>
                   Mot de passe oublié ?
                 </Typography>
-                <br />
                 {error && (
-                  <Typography variant="body2" color="error">
+                  <Typography variant="body2" color="error" style={{ marginBottom: "1rem" }}>
                     {error}
                   </Typography>
                 )}
-                <br></br>
-                <br></br>
-                <br></br>
                 <Grid container className="boutons">
                   <Grid item xs={12}>
                     <Button
@@ -513,24 +506,16 @@ const dateAlert = `${year}-${month}-${day}`;
                       className='connect'
                       fullWidth
                       disabled={isLoggingIn}
-                      style={{
-                        backgroundImage: `url(${backgroundImage1})`,
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center',
-                        opacity: isLoggingIn ? 0.7 : 1,
-                        cursor: isLoggingIn ? 'not-allowed' : 'pointer'
-                      }}
                     >
-                      {isLoggingIn ? 'Connexion en cours...' : 'Se connecter'}
+                      {isLoggingIn ? 'Connexion en cours...' : 'SE CONNECTER'}
                     </Button>
                   </Grid>
-                  <Box mt={33} className="copy">
-                    <Typography variant="body2" color="textSecondary" left="15px" top="15px">
-                      © {new Date().getFullYear()} CSPD DAMAK. Tous droits réservés.
-                    </Typography>
-                  </Box>
                 </Grid>
+                <Box className="copy">
+                  <Typography variant="body2">
+                    © {new Date().getFullYear()} CSPD DAMAK. Tous droits réservés.
+                  </Typography>
+                </Box>
               </form>
             </div>
           </Grid>

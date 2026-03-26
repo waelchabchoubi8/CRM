@@ -60,14 +60,8 @@ function App() {
               currentUser ? <AppBar user={currentUser} onLogout={handleLogout} /> : <Navigate to="/login" />
             }
           />
-           <Route path="/tickets" element={<TicketsComponent />} />
+          <Route path="/tickets" element={<TicketsComponent />} />
           <Route path="/" element={currentUser ? <Navigate to="/login" /> : <Login onLogin={handleLogin} />} />
-          <Route
-            path="/appBar"
-            element={
-              currentUser ? <BasicTabs user={currentUser} /> : <Navigate to="/login" />
-            }
-          />
         </Routes>
       </Router>
     </Provider>
