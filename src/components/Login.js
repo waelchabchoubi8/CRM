@@ -231,6 +231,7 @@ const Login = () => {
     setIsLoggingIn(true);
     if (LOGIN.includes('%') || MOT_DE_PASSE.includes('%')) {
       setError("certains caractères saisis ne sont pas autorisés. Veuillez vérifier votre saisie.");
+      setIsLoggingIn(false);
       return;
     }
 
