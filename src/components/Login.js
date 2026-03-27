@@ -230,7 +230,7 @@ const Login = () => {
     if (isLoggingIn) return;
     setIsLoggingIn(true);
     if (LOGIN.includes('%') || MOT_DE_PASSE.includes('%')) {
-      setError("Invalid characters are not allowed");
+      setError("certains caractères saisis ne sont pas autorisés. Veuillez vérifier votre saisie.");
       return;
     }
 
