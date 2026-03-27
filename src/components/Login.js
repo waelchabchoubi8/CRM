@@ -229,6 +229,10 @@ const Login = () => {
 
     if (isLoggingIn) return;
     setIsLoggingIn(true);
+    if (LOGIN.includes('%') || MOT_DE_PASSE.includes('%')) {
+      setError("Invalid characters are not allowed");
+      return;
+    }
 
     try {
       const response = await axios.post(
