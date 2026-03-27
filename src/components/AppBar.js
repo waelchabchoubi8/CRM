@@ -1470,31 +1470,20 @@ export default function MiniDrawer() {
           {!isLoading && accessRights.ACCESS_CONTACT === 1 && (
             <>
               <Tooltip title="Commercial" placement="right">
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                  <ListItemButton
-                    onClick={() => handleCategoryClick('Commercial')}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? 'initial' : 'center',
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ContactsIcon style={{ color: '#4379F2' }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Département Commercial"
-                    />
-                    {open && (openCategory === 'Commercial' ? <ExpandLess /> : <ExpandMore />)}
-                  </ListItemButton>
-                </ListItem>
-              </Tooltip>
+  <ListItem disablePadding>
+    <ListItemButton onClick={() => handleCategoryClick('Commercial')}>
+      <ListItemIcon>
+        <ContactsIcon style={{ color: '#4379F2' }} />
+      </ListItemIcon>
+
+      {/* Text shows always, just like Documents */}
+      <ListItemText primary="Département Commercial" />
+
+      {/* Arrow toggles based on openCategory */}
+      {openCategory === 'Commercial' ? <ExpandLess /> : <ExpandMore />}
+    </ListItemButton>
+  </ListItem>
+</Tooltip>
 
               <Collapse in={openCategory === 'Commercial'} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
@@ -1696,105 +1685,49 @@ export default function MiniDrawer() {
               </Collapse>
             </>
           )}
-
-          {!isLoading && user.ROLE === 'administrateur' && (
-            <>
-              <Tooltip title="Paramétrage" placement="right">
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                  <ListItemButton
-                    onClick={() => handleCategoryClick('Paramétrage')}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? 'initial' : 'center',
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img src={settings} alt="Settings Icon" style={{ width: '30px', height: '30px' }} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Paramétrage"
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                    {open && (openCategory === 'Paramétrage' ? <ExpandLess /> : <ExpandMore />)}
-                  </ListItemButton>
-                </ListItem>
-              </Tooltip>
-
-              <Tooltip title="Administration" placement="right">
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                  <ListItemButton
-                    onClick={() => handleCategoryClick('Administration')}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? 'initial' : 'center',
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ManageAccountsIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Administration"
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                    {open && (openCategory === 'Administration' ? <ExpandLess /> : <ExpandMore />)}
-                  </ListItemButton>
-                </ListItem>
-              </Tooltip>
-            </>
-          )}
-
-          {!isLoading && (accessRights.ACCESS_ALL_DOC === 1 || accessRights.ACCESS_DOC_AD === 1) && (
+          {!isLoading && accessRights.ACCESS_ALL_DOC === 1 && (
             <>
               <Tooltip title="Documents" placement="right">
-                <ListItem disablePadding sx={{ display: 'block' }}>
+                <ListItem disablePadding>
                   <ListItemButton
-                    onClick={() => handleCategoryClick('Documents')}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? 'initial' : 'center',
-                      px: 2.5,
-                    }}
+                    onClick={() =>
+                      handleCategoryClick("Documents")
+                    }
                   >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <InsertDriveFileIcon style={{ color: "#4379F2" }} />
+                    <ListItemIcon>
+                      <InsertDriveFileIcon style={{ color: "#4379F2" }}></InsertDriveFileIcon>
                     </ListItemIcon>
-                    <ListItemText
-                      primary="Documents"
-                    />
-                    {open && (openCategory === 'Documents' ? <ExpandLess /> : <ExpandMore />)}
+                    <ListItemText primary="Documents" />
+                    {openCategory === "Documents" ? (
+                      <ExpandLess />
+                    ) : (
+                      <ExpandMore />
+                    )}
                   </ListItemButton>
                 </ListItem>
               </Tooltip>
-              <Collapse in={openCategory === "Documents"} timeout="auto" unmountOnExit>
+              <Collapse
+                in={openCategory === "Documents"}
+                timeout="auto"
+                unmountOnExit
+              >
+
                 <List component="div" disablePadding>
                   {departments.map((dept, index) => (
-                    <Tooltip title={`Département ${dept.NOM}`} placement="right" key={dept.ID}>
+                    <Tooltip
+                      title={`Département ${dept.NOM}`}
+                      placement="right"
+                      key={dept.ID}
+                    >
                       <ListItem disablePadding>
                         <ListItemButton onClick={() => handleTabClick(index, dept)}>
                           <ListItemIcon>
                             <ViewStreamIcon />
                           </ListItemIcon>
-                          <ListItemText primary={`Département ${dept.NOM}`} sx={boldTextStyle} />
+                          <ListItemText
+                            primary={`Département ${dept.NOM}`}
+                            sx={boldTextStyle}
+                          />
                         </ListItemButton>
                       </ListItem>
                     </Tooltip>
